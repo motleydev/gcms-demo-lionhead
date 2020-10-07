@@ -1,14 +1,27 @@
-import Nav from '../components/nav'
+import { getAllHotelsForHome } from "../lib/graphcms";
+import Container from "components/container";
+import Layout from "components/layout";
 
-export default function IndexPage() {
+import HotelListing from "components/hotelListing";
+
+export default function IndexPage({ hotels, preview }) {
   return (
-    <div>
-      <Nav />
-      <div className="py-20">
-        <h1 className="text-5xl text-center text-accent-1">
-          Next.js + Tailwind CSS
-        </h1>
+    <Layout preview={preview}>
+      <div className="py-4">
+        <Container>
+          <h1 className="font-serif text-5xl">Wanderlust</h1>
+        </Container>
+        {hotels.map((hotel, index) => (
+          <HotelListing key={index} hotel={hotel} />
+        ))}
       </div>
-    </div>
-  )
+    </Layout>
+  );
+}
+
+export async function getStaticProps({ preview = false }) {
+  const hotels = (await getAllHotelsForHome(preview)) || [];
+  return {
+    props: { hotels, preview },
+  };
 }
